@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Reserva de Sala de Computación</title>
+    <title>Sistema de Reserva Sala de Enlaces - Colegio Altazor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
@@ -31,12 +31,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
-                        💻
+                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm overflow-hidden">
+                        <img src="https://colegioaltazor.cl/wp-content/uploads/2021/04/logo-altazor-coquimbo.png" alt="Logo Colegio Altazor" class="w-full h-full object-contain">
                     </div>
                     <div>
-                        <h1 class="font-bold text-slate-900 text-base leading-tight">Reserva Sala de Computación</h1>
-                        <p class="text-xs text-slate-500">Gestión de Bloques Horarios Escolares</p>
+                        <h1 class="font-bold text-slate-900 text-base leading-tight">Colegio Altazor Coquimbo</h1>
+                        <p class="text-xs text-slate-500">Sistema de Reserva Sala de Enlaces</p>
                     </div>
                 </div>
 
@@ -364,7 +364,6 @@
             e.preventDefault();
             const password = document.getElementById('admin-password-input').value;
             
-            // Nueva clave de acceso
             if (password === 'altazor2026') {
                 isAdminAuthenticated = true;
                 closeAdminAuthModal();
@@ -489,7 +488,6 @@
             const course = document.getElementById('course-name').value;
             const reason = document.getElementById('usage-reason').value;
 
-            // Validación estricta en JS por seguridad
             if (!teacherName || !teacherEmail || !subject || !course || !reason.trim()) {
                 alert('Por favor, completa todos los campos requeridos (*).');
                 if (submitBtn) {
@@ -568,7 +566,9 @@
                             <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-100 text-emerald-800">Aprobada</span>
                         </div>
                         <div class="flex items-start gap-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 font-bold shrink-0">SALA</div>
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center p-1 shrink-0">
+                                <img src="https://colegioaltazor.cl/wp-content/uploads/2021/04/logo-altazor-coquimbo.png" alt="Logo Colegio Altazor" class="w-full h-full object-contain">
+                            </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-sm leading-tight">${res.name}</h4>
                                 <p class="text-xs text-slate-500 mt-0.5">${res.rut} • ${res.subject || 'N/A'} • ${res.course || 'N/A'}</p>
@@ -621,7 +621,6 @@
                 return;
             }
 
-            // Encabezado con indicador explícito de separador (sep=;) y BOM para compatibilidad con Excel
             let csvContent = "\uFEFFsep=;\nID;Fecha;Horario;Profesor;Correo;Curso;Asignatura;Motivo\n";
             
             reservations.forEach(r => {
@@ -638,7 +637,7 @@
             const url = URL.createObjectURL(blob);
             
             link.setAttribute("href", url);
-            link.setAttribute("download", `reservas_computacion_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute("download", `reservas_enlaces_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
