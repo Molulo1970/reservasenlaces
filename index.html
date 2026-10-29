@@ -32,7 +32,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm overflow-hidden">
-                        <img src="logo-altazor.jpg" alt="Logo Colegio Altazor Coquimbo" class="w-full h-full object-contain">
+                        <img src="https://colegioaltazor.cl/wp-content/uploads/2021/04/logo-altazor-coquimbo.png" alt="Logo Colegio Altazor Coquimbo" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/gist/assets/logo-fallback.jpg';">
                     </div>
                     <div>
                         <h1 class="font-bold text-slate-900 text-base leading-tight">Colegio Altazor Coquimbo</h1>
@@ -313,7 +313,6 @@
 
     <!-- SCRIPTS LÓGICOS DE LA APLICACIÓN -->
     <script>
-        // Inicializar EmailJS vinculando la clave pública
         window.addEventListener('DOMContentLoaded', () => {
             if (typeof emailjs !== 'undefined') {
                 emailjs.init("k8USQG-ygUjd53Wdd");
@@ -567,7 +566,7 @@
                         </div>
                         <div class="flex items-start gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center p-1 shrink-0">
-                                <img src="logo-altazor.jpg" alt="Logo Colegio Altazor Coquimbo" class="w-full h-full object-contain">
+                                <img src="https://colegioaltazor.cl/wp-content/uploads/2021/04/logo-altazor-coquimbo.png" alt="Logo Colegio Altazor Coquimbo" class="w-full h-full object-contain">
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-sm leading-tight">${res.name}</h4>
