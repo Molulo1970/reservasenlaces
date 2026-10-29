@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Reserva de Sala de Computación</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -313,10 +313,12 @@
 
     <!-- SCRIPTS LÓGICOS DE LA APLICACIÓN -->
     <script>
-        // Inicializar EmailJS con tu Public Key
-        (function() {
-            emailjs.init("k8USQG-ygUjd53Wdd");
-        })();
+        // Inicializar EmailJS vinculando la clave pública
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init("k8USQG-ygUjd53Wdd");
+            }
+        });
 
         const timeSlots = [
             { id: 1, name: "Bloque 1", time: "08:00 - 08:45" },
@@ -497,11 +499,9 @@
                 reason: reason
             };
 
-            // Guardar en el almacenamiento del navegador
             reservations.push(newReservation);
             saveReservations();
 
-            // Parámetros para EmailJS
             const templateParams = {
                 to_email: teacherEmail,
                 teacher_name: teacherName,
@@ -513,18 +513,24 @@
                 reservation_id: newReservation.id
             };
 
-            // Enviar correo de notificación
-            emailjs.send("service_otsubfq", "template_gxh2rl6", templateParams)
-                .then(function(response) {
-                    alert('¡Reserva realizada con éxito y correo enviado!');
-                    closeBookingModal();
-                    renderSlotsGrid();
-                }, function(error) {
-                    alert('Reserva guardada correctamente en la web, pero ocurrió un problema al despachar el correo.');
-                    console.error('Error EmailJS:', error);
-                    closeBookingModal();
-                    renderSlotsGrid();
-                });
+            if (typeof emailjs !== 'undefined') {
+                emailjs.send("service_otsubfq", "template_gxh2rl6", templateParams)
+                    .then(function(response) {
+                        alert('¡Reserva registrada con éxito y correo enviado!');
+                        closeBookingModal();
+                        renderSlotsGrid();
+                    }, function(error) {
+                        const errorDetails = (error && error.text) ? error.text : JSON.stringify(error);
+                        alert('Reserva guardada localmente, pero EmailJS reportó el siguiente error: ' + errorDetails);
+                        console.error('Error detallado de EmailJS:', error);
+                        closeBookingModal();
+                        renderSlotsGrid();
+                    });
+            } else {
+                alert('Reserva guardada. La librería de EmailJS no pudo conectarse.');
+                closeBookingModal();
+                renderSlotsGrid();
+            }
         }
 
         function renderMyReservations() {
@@ -603,18 +609,28 @@
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,ID,Fecha,Horario,Profesor,Correo,Curso,Asignatura,Motivo\n";
+            // Encabezado con indicador explícito de separador (sep=;) y BOM para compatibilidad con Excel
+            let csvContent = "\uFEFFsep=;\nID;Fecha;Horario;Profesor;Correo;Curso;Asignatura;Motivo\n";
+            
             reservations.forEach(r => {
-                csvContent += `"${r.id}","${r.date}","${r.slotTime}","${r.name}","${r.rut}","${r.course || ''}","${r.subject || ''}","${r.reason}"\n`;
+                const reasonClean = (r.reason || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
+                const nameClean = (r.name || '').replace(/"/g, '""');
+                const subjectClean = (r.subject || '').replace(/"/g, '""');
+                const courseClean = (r.course || '').replace(/"/g, '""');
+                
+                csvContent += `"${r.id}";"${r.date}";"${r.slotTime}";"${nameClean}";"${r.rut}";"${courseClean}";"${subjectClean}";"${reasonClean}"\n`;
             });
 
-            const encodedUri = encodeURI(csvContent);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
             link.setAttribute("download", `reservas_computacion_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         document.addEventListener('click', function (e) {
